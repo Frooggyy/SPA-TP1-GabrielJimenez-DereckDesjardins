@@ -283,7 +283,7 @@ async function renderDeletePostForm(id) {
         if (Post !== null) {
             $("#postForm").append(`
         <div class="PostdeleteForm">
-            <h4>Effacer le favori suivant?</h4>
+            <h4>Effacer la nouvelle suivante?</h4>
             <br>
             <div class="PostRow" id='${Post.Id}'>
         <div class="PostContainer noselect">
