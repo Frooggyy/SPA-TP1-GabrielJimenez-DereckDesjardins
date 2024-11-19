@@ -253,7 +253,24 @@ async function renderEditPostForm(id) {
     }
     removeWaitingGif();
 }
+function convertToFrenchDate(numeric_date) {
+    let date = new Date(numeric_date);
+    var options = { year: 'numeric', month: 'long', day: 'numeric' };
+    var opt_weekday = { weekday: 'long' };
+    var weekday = toTitleCase(date.toLocaleDateString("fr-FR", opt_weekday));
+
+    function toTitleCase(str) {
+        return str.replace(
+            /\w\S*/g,
+            function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+    return weekday + " le " + date.toLocaleDateString("fr-FR", options) + " @ " + date.toLocaleTimeString("fr-FR");
+}
 async function renderDeletePostForm(id) {
+    
     hidePosts();
     $("#actionTitle").text("Retrait");
     $('#postForm').show();
@@ -262,23 +279,33 @@ async function renderDeletePostForm(id) {
     console.log(response);
     if (!Posts_API.error) {
         let Post = response.data;
+        let date =  convertToFrenchDate(Post.Creation);
         if (Post !== null) {
             $("#postForm").append(`
         <div class="PostdeleteForm">
             <h4>Effacer le favori suivant?</h4>
             <br>
-            <div class="PostRow" id=${Post.Id}">
-                <div class="PostContainer noselect">
-                    <div class="PostLayout">
-                        <div class="Post">
-                            <span class="PostTitle">${Post.Title}</span>
-                        </div>
-                        <span class="PostCategory">${Post.Category}</span>
-                    </div>
-                    <div class="PostCommandPanel">
-                    </div>
+            <div class="PostRow" id='${Post.Id}'>
+        <div class="PostContainer noselect">
+            <div class="PostLayout">
+                <span class="PostCategory">${Post.Category}</span>
+            </div>
+            <div class="imageLayout">
+                <img class="PostImage" src="${Post.Image}"></img>
+            </div>
+            <div class="date">${date}</div>
+            <div>
+                <div class="PostTitleContainer">
+                    <span class="PostTitle">${Post.Title}</span>
                 </div>
-            </div>   
+            </div>
+            <div>
+                <div class="PostDetailsContainer">
+                    <span class="PostDetails">${Post.Text}</span>
+                </div>
+            </div>
+        </div>
+    </div>    
             <br>
             <input type="button" value="Effacer" id="deletePost" class="btn btn-primary">
             <input type="button" value="Annuler" id="cancel" class="btn btn-secondary">
@@ -438,21 +465,5 @@ function renderPost(Post) {
     </div>           
     `);
 
-    function convertToFrenchDate(numeric_date) {
-        let date = new Date(numeric_date);
-        var options = { year: 'numeric', month: 'long', day: 'numeric' };
-        var opt_weekday = { weekday: 'long' };
-        var weekday = toTitleCase(date.toLocaleDateString("fr-FR", opt_weekday));
-    
-        function toTitleCase(str) {
-            return str.replace(
-                /\w\S*/g,
-                function (txt) {
-                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-                }
-            );
-        }
-        return weekday + " le " + date.toLocaleDateString("fr-FR", options) + " @ " + date.toLocaleTimeString("fr-FR");
-    }
 
 }
