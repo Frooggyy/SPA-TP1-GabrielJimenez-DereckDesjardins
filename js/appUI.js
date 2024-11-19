@@ -51,7 +51,7 @@ async function Init_UI() {
     })
     $('#searchBarContainer').hide();
 
-    
+        renderPosts()
         showPosts();
     
     start_Periodic_Refresh();
