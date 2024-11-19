@@ -64,8 +64,12 @@ function renderSearchBar(){
 
         $('#search')[0].className = "cmdIcon fa fa-magnifying-glass";
         $('#search').on("click", function(){
+            
             renderSearchBar();
+            
         });
+        filtered=false;
+        renderPosts();
         $('#searchBarContainer').hide();
     });
     
@@ -391,6 +395,7 @@ function renderPostForm(Post = null) {
         
         Post = await Posts_API.Save(Post, create);
         if (!Posts_API.error) {
+            renderPosts();
             showPosts();
             await pageManager.update(false);
             compileCategories();
