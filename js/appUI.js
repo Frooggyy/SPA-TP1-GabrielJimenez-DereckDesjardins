@@ -28,7 +28,7 @@ async function Init_UI() {
         height: $("#sample").outerHeight()
     };
     pageManager = new PageManager('scrollPanel', 'itemsPanel', itemLayout, renderPosts);
-    $('#search').on("click", function(){
+    $('#search').on("click", function () {
         renderSearchBar();
     })
     $('#createPost').on("click", async function () {
@@ -40,7 +40,7 @@ async function Init_UI() {
     $('#aboutCmd').on("click", function () {
         renderAbout();
     });
-    $('#searchWords').on('click', async function(){
+    $('#searchWords').on('click', async function () {
         let wordFilter = $('#searchInput')[0].value;
         sessionStorage.setItem("filter", wordFilter);
         console.log(wordFilter);
@@ -49,28 +49,28 @@ async function Init_UI() {
     })
     $('#searchBarContainer').hide();
 
-    $("#itemsPanel").empty();
-    
+
+
     showPosts();
     start_Periodic_Refresh();
 }
-function renderSearchBar(){
+function renderSearchBar() {
     $('#searchBarContainer').show();
-    
+
     $('#search')[0].className = "cmdIcon fa fa-times";
-    $('#search').on("click", function(){
+    $('#search').on("click", function () {
 
         $('#search')[0].className = "cmdIcon fa fa-magnifying-glass";
-        $('#search').on("click", function(){
-            
+        $('#search').on("click", function () {
+
             renderSearchBar();
-            
+
         });
-        filtered=false;
+        filtered = false;
         renderPosts();
         $('#searchBarContainer').hide();
     });
-    
+
 }
 function showPosts() {
     $("#actionTitle").text("Fil de nouvelles");
@@ -159,35 +159,35 @@ async function compileCategories() {
         }
     }
 }
-async function renderPosts(queryString ='') {
+async function renderPosts(queryString = '') {
     $("#itemsPanel").empty();
     let endOfData = false;
-    
-    if(queryString.includes('?')){
+
+    if (queryString.includes('?')) {
         queryString += "&sort=Creation";
-    }else{
-        queryString+="?sort=Creation";
+    } else {
+        queryString += "?sort=Creation";
     }
     console.log(queryString);
-    let filter= sessionStorage.getItem("filter");
-    
+    let filter = sessionStorage.getItem("filter");
+
     if (selectedCategory != "") queryString += "&category=" + selectedCategory;
-        addWaitingGif();
+    addWaitingGif();
     let response = await Posts_API.Get(queryString);
     if (!Posts_API.error) {
         currentETag = response.ETag;
         let Posts = response.data;
         Posts.reverse();
         if (Posts.length > 0) {
-            if(filtered){
+            if (filtered) {
                 var filterStrings = [];                             //Taken from StackOverflow : https://stackoverflow.com/questions/48145432/javascript-includes-case-insensitive
                 var seperatedFilters = filter.split(" ");
-                seperatedFilters.forEach(word=>{
+                seperatedFilters.forEach(word => {
                     filterStrings.push(word);
                 })
-                var regex = new RegExp(filterStrings.join( "|" ), "i");
-                Posts.forEach(Post=>{
-                    if(regex.test(Post.Text) || Post.Title.includes(filter)  || Post.Category.includes(filter) ){
+                var regex = new RegExp(filterStrings.join("|"), "i");
+                Posts.forEach(Post => {
+                    if (regex.test(Post.Text) || Post.Title.includes(filter) || Post.Category.includes(filter)) {
                         console.log(Post + "valid")
                         $("#itemsPanel").append(renderPost(Post));
                     }
@@ -200,7 +200,7 @@ async function renderPosts(queryString ='') {
                 $(".deleteCmd").on("click", function () {
                     renderDeletePostForm($(this).attr("deletePostId"))
                 });
-            }else{
+            } else {
                 Posts.forEach(Post => {
                     $("#itemsPanel").append(renderPost(Post));
                 });
@@ -213,7 +213,7 @@ async function renderPosts(queryString ='') {
                     renderDeletePostForm($(this).attr("deletePostId"));
                 });
             }
-            
+
         } else
             endOfData = true;
     } else {
@@ -223,8 +223,8 @@ async function renderPosts(queryString ='') {
     return endOfData;
 }
 
-function orderByDates(Posts){
-    Posts = Posts.sort((a,b)=> a.Creation - b.Creation);
+function orderByDates(Posts) {
+    Posts = Posts.sort((a, b) => a.Creation - b.Creation);
     return Posts.reverse();
 }
 
@@ -242,8 +242,13 @@ async function renderEditPostForm(id) {
     let response = await Posts_API.Get(id)
     if (!Posts_API.error) {
         let Post = response.data;
-        if (Post !== null)
+        if (Post !== null) {
+
+            $("#itemsPanel").empty();
             renderPostForm(Post);
+        }
+
+
         else
             renderError("Post introuvable!");
     } else {
@@ -268,7 +273,7 @@ function convertToFrenchDate(numeric_date) {
     return weekday + " le " + date.toLocaleDateString("fr-FR", options) + " @ " + date.toLocaleTimeString("fr-FR");
 }
 async function renderDeletePostForm(id) {
-    
+
     hidePosts();
     $("#actionTitle").text("Retrait");
     $('#postForm').show();
@@ -277,7 +282,7 @@ async function renderDeletePostForm(id) {
     console.log(response);
     if (!Posts_API.error) {
         let Post = response.data;
-        let date =  convertToFrenchDate(Post.Creation);
+        let date = convertToFrenchDate(Post.Creation);
         if (Post !== null) {
             $("#postForm").append(`
         <div class="PostdeleteForm">
@@ -343,22 +348,22 @@ function newPost() {
     Post = {};
     Post.Id = 10;
     Post.Title = "";
-    Post.Image="";
+    Post.Image = "";
     Post.Text = "";
     Post.Category = "";
-    Post.Creation= 0;
+    Post.Creation = 0;
     return Post;
 }
 function renderPostForm(Post = null) {
     hidePosts();
     let create = Post == null;
-    if (create){
+    if (create) {
         Post = newPost();
         Post.Image = "images/pendingImage.png"
     }
     Post.Creation = Date.now();
-        
-    
+
+
 
     $("#actionTitle").text(create ? "Création" : "Modification");
     $("#postForm").show();
@@ -385,9 +390,8 @@ function renderPostForm(Post = null) {
                 name="Text"
                 id="Text"
                 placeholder="Text"
-                required
-                value="${Post.Text}" 
-            ></textarea>
+                required 
+            >${Post.Text}</textarea>
             <label class="form-label">Image </label>
             <div   class='imageUploader' 
                    newImage='${create}' 
@@ -410,17 +414,16 @@ function renderPostForm(Post = null) {
             <input type="button" value="Annuler" id="cancel" class="btn btn-secondary">
         </form>
     `);
-    
-    
+
+
     initFormValidation();
     initImageUploaders();
     $('#PostForm').on("submit", async function (event) {
         event.preventDefault();
         let Post = getFormData($("#PostForm"));
-        
+
         Post = await Posts_API.Save(Post, create);
         if (!Posts_API.error) {
-            renderPosts();
             showPosts();
             await pageManager.update(false);
             compileCategories();
