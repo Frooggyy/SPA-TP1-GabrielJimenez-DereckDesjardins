@@ -29,14 +29,14 @@ class PageManager {
         this.currentPage.limit = nbRows * nbColumns + nbColumns /* make sure to always have a content overflow */;
     }
     currentPageToQueryString(append = false) {
-        this.setCurrentPageLimit();
-        let limit = this.currentPage.limit;
-        let offset = this.currentPage.offset;
-        if (!append) {
-            limit = limit * (offset + 1);
-            offset = 0;
-        }
-        return `?limit=${limit}&offset=${offset}`;
+        // this.setCurrentPageLimit();
+        // let limit = this.currentPage.limit;
+        // let offset = this.currentPage.offset;
+        // if (!append) {
+        //     limit = limit * (offset + 1);
+        //     offset = 0;
+        // }
+        // return `?limit=${limit}&offset=${offset}`;
     }
 
     scrollToElem(elemId) {

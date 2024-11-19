@@ -23,13 +23,11 @@ function removeWaitingGif() {
 Init_UI();
 
 async function Init_UI() {
-    
     itemLayout = {
         width: $("#sample").outerWidth(),
         height: $("#sample").outerHeight()
     };
-        pageManager = new PageManager('scrollPanel', 'itemsPanel', itemLayout, renderPosts);
-    compileCategories();
+    pageManager = new PageManager('scrollPanel', 'itemsPanel', itemLayout, renderPosts);
     $('#search').on("click", function(){
         renderSearchBar();
     })
@@ -51,9 +49,9 @@ async function Init_UI() {
     })
     $('#searchBarContainer').hide();
 
-        renderPosts()
-        showPosts();
+    $("#itemsPanel").empty();
     
+    showPosts();
     start_Periodic_Refresh();
 }
 function renderSearchBar(){
@@ -372,7 +370,7 @@ function renderPostForm(Post = null) {
 
             <label for="Title" class="form-label">Titre </label>
             <input 
-                class="form-control Alpha"
+                class="form-control"
                 name="Title" 
                 id="Title" 
                 placeholder="Titre"
@@ -382,14 +380,14 @@ function renderPostForm(Post = null) {
                 value="${Post.Title}"
             />
             <label for="Text" class="form-label">Text </label>
-            <input
-                class="form-control Text"
+            <textarea
+                class="form-control"
                 name="Text"
                 id="Text"
                 placeholder="Text"
                 required
                 value="${Post.Text}" 
-            />
+            ></textarea>
             <label class="form-label">Image </label>
             <div   class='imageUploader' 
                    newImage='${create}' 
